@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
-using System.Text;
 using GestionTurnos.BackEnd.Model.Entities;
 using GestionTurnos.BackEnd.ServiceDependencies;
 using Microsoft.Extensions.Configuration;
@@ -32,21 +31,18 @@ namespace GestionTurnos.BackEnd.Service.Services
 
         public string HashPassword(string password, out string salt)
         {
-            using var rng = new RNGCryptoServiceProvider();
-            byte[] saltBytes = new byte[16];
-            rng.GetBytes(saltBytes);
-            salt = Convert.ToBase64String(saltBytes);
-
-            using var sha256 = SHA256.Create();
-            var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password + salt));
+            using var hmac = new HMACSHA512();
+            salt = Convert.ToBase64String(hmac.Key);
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return Convert.ToBase64String(hash);
         }
 
         public bool VerifyPassword(string password, string storedHash, string storedSalt)
         {
-            using var sha256 = SHA256.Create();
-            var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password + storedSalt));
-            return Convert.ToBase64String(hash) == storedHash;
+            var key = Convert.FromBase64String(storedSalt);
+            using var hmac = new HMACSHA512(key);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(computedHash) == storedHash;
         }
 
         public string GenerateJwtToken(Usuario usuario)

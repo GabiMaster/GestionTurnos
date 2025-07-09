@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GestionTurnos.BackEnd.Model\GestionTurnos.BackEnd.Model.csproj" />
-    <ProjectReference Include="..\Shared.DTO\Shared.DTO.csproj" />
   </ItemGroup>
 
 </Project>
