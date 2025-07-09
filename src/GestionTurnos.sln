@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionTurnos.BackEnd.Servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.DTO", "Shared\Shared.DTO\Shared.DTO.csproj", "{373F4FA2-71B9-43AA-BEBB-A6B8ED2FD2F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionTurnos.FrontEnd.Web", "GestionTurnos.FrontEnd.Web\GestionTurnos.FrontEnd.Web.csproj", "{5D9E6DA9-7909-4349-AF7B-D5AB9819E447}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{373F4FA2-71B9-43AA-BEBB-A6B8ED2FD2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{373F4FA2-71B9-43AA-BEBB-A6B8ED2FD2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{373F4FA2-71B9-43AA-BEBB-A6B8ED2FD2F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D9E6DA9-7909-4349-AF7B-D5AB9819E447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9E6DA9-7909-4349-AF7B-D5AB9819E447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D9E6DA9-7909-4349-AF7B-D5AB9819E447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9E6DA9-7909-4349-AF7B-D5AB9819E447}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,5 +66,8 @@ Global
 		{19F56810-9232-4EDB-910A-C8D840B0DAD3} = {56725125-C6E2-49D8-8491-D71D7404CB0B}
 		{0683D9BC-A70F-40C2-A14C-54799AE9C510} = {56725125-C6E2-49D8-8491-D71D7404CB0B}
 		{373F4FA2-71B9-43AA-BEBB-A6B8ED2FD2F0} = {3661ABEC-F562-41A0-9D65-8C335E37C705}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22317FA8-8CBE-467D-B14E-AFEC87ADCF9C}
 	EndGlobalSection
 EndGlobal

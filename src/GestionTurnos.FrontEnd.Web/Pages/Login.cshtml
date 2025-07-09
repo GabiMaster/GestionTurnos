@@ -1,0 +1,24 @@
+﻿@page
+@model GestionTurnos.FrontEnd.Web.Pages.LoginModel
+@{
+	ViewData["Title"] = "Iniciar sesión";
+}
+<h2>Iniciar sesión</h2>
+
+<form method="post">
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" type="password" />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+    </div>
+    @if (Model.MensajeError != null)
+    {
+        <div class="text-danger">@Model.MensajeError</div>
+    }
+</form>
