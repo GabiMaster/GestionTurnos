@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
 using GestionTurnos.BackEnd.Model.Entities;
-using GestionTurnos.BackEnd.ServiceDependencies;
-using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using GestionTurnos.BackEnd.ServiceDependencies.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace GestionTurnos.BackEnd.Service.Services
 {
@@ -25,22 +20,21 @@ namespace GestionTurnos.BackEnd.Service.Services
 
         public Usuario? Authenticate(string email, string password)
         {
-            // Lógica de autenticación va acá (por ahora, simulada o se hace desde el controller)
+            // Implementación pendiente
             return null;
         }
 
-        public string HashPassword(string password, out string salt)
+        public string HashPassword(string password, out byte[] salt)
         {
             using var hmac = new HMACSHA512();
-            salt = Convert.ToBase64String(hmac.Key);
+            salt = hmac.Key;
             var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return Convert.ToBase64String(hash);
         }
 
-        public bool VerifyPassword(string password, string storedHash, string storedSalt)
+        public bool VerifyPassword(string password, string storedHash, byte[] storedSalt)
         {
-            var key = Convert.FromBase64String(storedSalt);
-            using var hmac = new HMACSHA512(key);
+            using var hmac = new HMACSHA512(storedSalt);
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return Convert.ToBase64String(computedHash) == storedHash;
         }
@@ -49,7 +43,7 @@ namespace GestionTurnos.BackEnd.Service.Services
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, usuario.NombreCompleto),
+                new Claim(ClaimTypes.Name, usuario.NombreUsuario),
                 new Claim(ClaimTypes.Email, usuario.Email),
                 new Claim(ClaimTypes.Role, usuario.Rol.ToString())
             };
@@ -69,4 +63,5 @@ namespace GestionTurnos.BackEnd.Service.Services
         }
     }
 }
+
 
