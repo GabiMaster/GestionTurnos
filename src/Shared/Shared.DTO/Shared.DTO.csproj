@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\BackEnd\GestionTurnos.BackEnd.Model\GestionTurnos.BackEnd.Model.csproj" />
+  </ItemGroup>
+
 </Project>

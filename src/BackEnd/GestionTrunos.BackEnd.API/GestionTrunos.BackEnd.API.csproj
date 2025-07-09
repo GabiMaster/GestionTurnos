@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.DTO\Shared.DTO.csproj" />
     <ProjectReference Include="..\GestionTurnos.BackEnd.Data\GestionTurnos.BackEnd.Data.csproj" />
     <ProjectReference Include="..\GestionTurnos.BackEnd.Model\GestionTurnos.BackEnd.Model.csproj" />
     <ProjectReference Include="..\GestionTurnos.BackEnd.ServiceDependencies\GestionTurnos.BackEnd.ServiceDependencies.csproj" />

@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Mvc;
 using GestionTurnos.BackEnd.Model.Entities;
 using GestionTurnos.BackEnd.ServiceDependencies.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using GestionTurnos.BackEnd.Data.Contexts;
+using Shared.DTO;
 
 namespace GestionTurnos.BackEnd.API.Controllers
 {
@@ -21,13 +20,22 @@ namespace GestionTurnos.BackEnd.API.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] Usuario usuario)
+        public IActionResult Register([FromBody] RegisterUsuarioDTO dto)
         {
-            if (_db.Usuarios.Any(u => u.Email == usuario.Email))
+            if (_db.Usuarios.Any(u => u.Email == dto.Email))
                 return BadRequest("El email ya está registrado");
 
-            usuario.PasswordHash = _authService.HashPassword(usuario.PasswordHash, out var salt);
-            usuario.PasswordSalt = salt;
+            var passwordHash = _authService.HashPassword(dto.Password, out var salt);
+
+            var usuario = new Usuario
+            {
+                NombreUsuario = dto.Usuario,
+                Nombre = dto.Nombre,
+                Email = dto.Email,
+                PasswordHash = passwordHash,
+                PasswordSalt = salt,
+                Rol = dto.Rol
+            };
 
             _db.Usuarios.Add(usuario);
             _db.SaveChanges();
@@ -57,4 +65,6 @@ namespace GestionTurnos.BackEnd.API.Controllers
         public string Password { get; set; } = null!;
     }
 }
+
+
 
