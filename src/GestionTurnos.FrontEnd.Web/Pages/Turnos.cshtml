@@ -1,0 +1,83 @@
+@page
+@model TurnosModel
+@{
+    ViewData["Title"] = "Turnos";
+}
+
+<h2>Turnos</h2>
+
+<div id="turnos-lista" class="mb-4">
+    <h4>Mis turnos</h4>
+    @if (Model.Turnos?.Any() == true)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Servicio</th>
+                    <th>Fecha y Hora</th>
+                    <th>Estado</th>
+                    <th>QR</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var turno in Model.Turnos)
+            {
+                <tr>
+                    <td>@turno.Servicio?.Nombre</td>
+                    <td>@turno.FechaHora.ToString("g")</td>
+                    <td>@(turno.Confirmado ? "Confirmado" : "Pendiente")</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(turno.TokenQR))
+                        {
+                            <img src="data:image/png;base64,@turno.TokenQR" alt="QR" style="width:80px;" />
+                        }
+                        else
+                        {
+                            <span>No disponible</span>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">No tienes turnos agendados.</div>
+    }
+</div>
+
+<button class="btn btn-success mb-3" onclick="mostrarAgendar()">Agendar nuevo turno</button>
+
+<div id="agendar-turno" style="display:none;">
+    <h4>Agendar Turno</h4>
+    <form method="post">
+        <div class="mb-2">
+            <label>Servicio</label>
+            <select asp-for="NuevoTurno.ServicioId" asp-items="Model.ServiciosSelect" class="form-control"></select>
+        </div>
+        <div class="mb-2">
+            <label>Fecha y hora</label>
+            <input asp-for="NuevoTurno.FechaHora" type="datetime-local" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Agendar</button>
+        <button type="button" class="btn btn-secondary" onclick="ocultarAgendar()">Cancelar</button>
+    </form>
+    @if (!string.IsNullOrEmpty(Model.Mensaje))
+    {
+        <div class="alert alert-info mt-2">@Model.Mensaje</div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function mostrarAgendar() {
+            document.getElementById('agendar-turno').style.display = '';
+            document.getElementById('turnos-lista').style.display = 'none';
+        }
+        function ocultarAgendar() {
+            document.getElementById('agendar-turno').style.display = 'none';
+            document.getElementById('turnos-lista').style.display = '';
+        }
+    </script>
+}
