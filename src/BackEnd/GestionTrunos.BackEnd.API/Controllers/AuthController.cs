@@ -3,6 +3,7 @@ using GestionTurnos.BackEnd.Model.Entities;
 using GestionTurnos.BackEnd.ServiceDependencies.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using GestionTurnos.BackEnd.Data.Contexts;
 
 namespace GestionTurnos.BackEnd.API.Controllers
 {

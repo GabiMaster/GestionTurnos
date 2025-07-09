@@ -22,13 +22,15 @@ builder.Services.AddAuthentication(options =>
 .AddJwtBearer(options =>
 {
     var key = builder.Configuration["Jwt:Key"];
+    if (string.IsNullOrEmpty(key))
+        throw new Exception("Jwt:Key no configurado en appsettings.json");
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key!))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
     };
 });
 
