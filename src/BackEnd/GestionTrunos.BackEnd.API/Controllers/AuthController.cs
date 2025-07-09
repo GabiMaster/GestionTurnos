@@ -3,6 +3,8 @@ using GestionTurnos.BackEnd.Model.Entities;
 using GestionTurnos.BackEnd.ServiceDependencies.Interfaces;
 using GestionTurnos.BackEnd.Data.Contexts;
 using Shared.DTO;
+using GestionTurnos.BackEnd.Model.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestionTurnos.BackEnd.API.Controllers
 {
@@ -44,25 +46,22 @@ namespace GestionTurnos.BackEnd.API.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
         {
-            var user = _db.Usuarios.SingleOrDefault(u => u.Email == request.Email);
-            if (user == null)
-                return Unauthorized("Usuario no encontrado");
+            var usuario = await _db.Usuarios.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            if (usuario == null)
+            {
+                return Unauthorized(new { mensaje = "Email no encontrado" });
+            }
 
-            var isValid = _authService.VerifyPassword(request.Password, user.PasswordHash, user.PasswordSalt);
-            if (!isValid)
-                return Unauthorized("Contraseña incorrecta");
+            if (!_authService.VerifyPassword(dto.Password, usuario.PasswordHash, usuario.PasswordSalt))
+            {
+                return Unauthorized(new { mensaje = "Contraseña incorrecta" });
+            }
 
-            var token = _authService.GenerateJwtToken(user);
+            var token = _authService.GenerateJwtToken(usuario);
             return Ok(new { token });
         }
-    }
-
-    public class LoginRequest
-    {
-        public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
     }
 }
 
