@@ -62,6 +62,23 @@ namespace GestionTurnos.BackEnd.API.Controllers
             var token = _authService.GenerateJwtToken(usuario);
             return Ok(new { token });
         }
+
+        [HttpPost("recuperar-password")]
+        public IActionResult RecuperarPassword([FromBody] RecuperarPasswordRequest request)
+        {
+            // Simulación: en un caso real, deberías enviar un email con un enlace de recuperación
+            var user = _db.Usuarios.SingleOrDefault(u => u.Email == request.Email);
+            if (user == null)
+                return Ok(); // No revelar si el email existe
+            // Aquí deberías generar un token y enviarlo por email
+            // Por ahora, solo simula éxito
+            return Ok();
+        }
+
+        public class RecuperarPasswordRequest
+        {
+            public string Email { get; set; } = null!;
+        }
     }
 }
 
