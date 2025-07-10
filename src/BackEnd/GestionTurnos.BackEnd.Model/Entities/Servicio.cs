@@ -9,4 +9,5 @@
         public ICollection<Turno> Turnos { get; set; } = new List<Turno>();
         public ICollection<Profesional> Profesionales { get; set; } = new List<Profesional>();
     }
+
 }

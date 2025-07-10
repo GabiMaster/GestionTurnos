@@ -13,6 +13,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+<<<<<<< HEAD
+=======
+builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
+>>>>>>> 39cfee4b6e942fec02525b0d8d83cdbd19261576
 
 builder.Services.AddAuthentication(options =>
 {

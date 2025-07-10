@@ -27,9 +27,11 @@ else
                 <thead class="table-light">
                     <tr>
                         <th>Servicio</th>
+                        <th>Profesional</th>
                         <th>Fecha y Hora</th>
                         <th>Estado</th>
                         <th>QR</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +39,7 @@ else
                 {
                     <tr>
                         <td>@turno.Servicio?.Nombre</td>
+                        <td>@turno.Profesional?.NombreCompleto</td>
                         <td>@turno.FechaHora.ToString("g")</td>
                         <td>@(turno.Confirmado ? "Confirmado" : "Pendiente")</td>
                         <td>
@@ -48,6 +51,11 @@ else
                             {
                                 <span>No disponible</span>
                             }
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="Cancelar" asp-route-id="@turno.Id" style="display:inline">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Cancelar turno?')">Cancelar</button>
+                            </form>
                         </td>
                     </tr>
                 }
@@ -66,6 +74,10 @@ else
             <div class="mb-2">
                 <label>Servicio</label>
                 <select asp-for="NuevoTurno.ServicioId" asp-items="Model.ServiciosSelect" class="form-control"></select>
+            </div>
+            <div class="mb-2">
+                <label>Profesional</label>
+                <select asp-for="NuevoTurno.ProfesionalId" asp-items="Model.ProfesionalesSelect" class="form-control"></select>
             </div>
             <div class="mb-2">
                 <label>Fecha y hora</label>

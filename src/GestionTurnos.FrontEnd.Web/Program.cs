@@ -9,6 +9,7 @@ builder.Services.AddHttpClient<AuthApiService>();
 builder.Services.AddHttpContextAccessor(); 
 builder.Services.AddHttpClient<ServicioApiService>();
 builder.Services.AddHttpClient<TurnoApiService>();
+builder.Services.AddHttpClient<ProfesionalApiService>();
 
 var app = builder.Build();
 

@@ -1,0 +1,26 @@
+@page "{id:int}"
+@model GestionTurnos.FrontEnd.Web.Pages.ProfesionalesEditarModel
+@{
+    ViewData["Title"] = "Editar Profesional";
+}
+<h2 class="mb-4">Editar Profesional</h2>
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Profesional.NombreCompleto" class="form-label"></label>
+        <input asp-for="Profesional.NombreCompleto" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Profesional.Especialidad" class="form-label"></label>
+        <input asp-for="Profesional.Especialidad" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Servicios</label>
+        <select asp-for="Profesional.ServiciosIds" asp-items="Model.ServiciosSelect" class="form-select" multiple></select>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a asp-page="/Profesionales" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+@if (Model.Mensaje != null)
+{
+    <div class="alert alert-info mt-3">@Model.Mensaje</div>
+}

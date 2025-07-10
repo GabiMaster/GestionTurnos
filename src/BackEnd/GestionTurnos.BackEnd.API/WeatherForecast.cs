@@ -1,4 +1,4 @@
-namespace GestionTrunos.BackEnd.API
+namespace GestionTurnos.BackEnd.API
 {
     public class WeatherForecast
     {

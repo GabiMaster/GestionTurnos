@@ -11,10 +11,13 @@ namespace GestionTurnos.FrontEnd.Web.Pages
     {
         private readonly ServicioApiService _servicioApi;
         private readonly TurnoApiService _turnoApi;
+        private readonly ProfesionalApiService _profesionalApi;
 
         public List<Turno> Turnos { get; set; } = new();
         public List<Servicio> Servicios { get; set; } = new();
+        public List<Profesional> Profesionales { get; set; } = new();
         public SelectList ServiciosSelect => new(Servicios, "Id", "Nombre");
+        public SelectList ProfesionalesSelect => new(Profesionales, "Id", "NombreCompleto");
 
         [BindProperty]
         public Turno NuevoTurno { get; set; } = new();
@@ -25,6 +28,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
         {
             _servicioApi = servicioApi;
             _turnoApi = turnoApi;
+            _profesionalApi = profesionalApi;
         }
 
         public async Task OnGetAsync()
@@ -36,6 +40,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
                 return;
             }
             Servicios = await _servicioApi.ObtenerServicios();
+            Profesionales = await _profesionalApi.ObtenerProfesionales();
             Turnos = await _turnoApi.ObtenerTurnosUsuario();
         }
 
@@ -48,6 +53,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
                 return Page();
             }
             Servicios = await _servicioApi.ObtenerServicios();
+            Profesionales = await _profesionalApi.ObtenerProfesionales();
             var resultado = await _turnoApi.AgendarTurno(NuevoTurno);
             if (resultado)
                 Mensaje = "Turno agendado correctamente.";
@@ -55,6 +61,12 @@ namespace GestionTurnos.FrontEnd.Web.Pages
                 Mensaje = "No se pudo agendar el turno.";
             Turnos = await _turnoApi.ObtenerTurnosUsuario();
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostCancelarAsync(int id)
+        {
+            await _turnoApi.CancelarTurno(id);
+            return RedirectToPage();
         }
     }
 }
