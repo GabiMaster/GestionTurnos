@@ -18,9 +18,16 @@ namespace GestionTrunos.BackEnd.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Profesional>>> Get()
+        public async Task<ActionResult<IEnumerable<object>>> Get()
         {
-            return await _context.Profesionales.Include(p => p.Servicios).ToListAsync();
+            var profesionales = await _context.Profesionales.Include(p => p.Servicios).ToListAsync();
+            var result = profesionales.Select(p => new {
+                p.Id,
+                p.NombreCompleto,
+                p.Especialidad,
+                ServiciosIds = p.Servicios.Select(s => s.Id).ToList()
+            });
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

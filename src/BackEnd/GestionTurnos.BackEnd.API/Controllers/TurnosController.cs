@@ -142,6 +142,38 @@ namespace GestionTrunos.BackEnd.API.Controllers
             return Ok(turno);
         }
 
+        // POST: api/turnos
+        [HttpPost]
+        public async Task<IActionResult> AgendarTurnoSpa([FromBody] dynamic dto)
+        {
+            // Permitir agendar desde SPA solo con servicioId y fechaHora
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdStr, out int userId))
+                return Unauthorized();
+            int servicioId = (int)dto.servicioId;
+            DateTime fechaHora = DateTime.Parse((string)dto.fechaHora);
+            // Buscar profesional disponible (el primero que tenga ese servicio)
+            var profesional = await _context.Profesionales
+                .Include(p => p.Servicios)
+                .FirstOrDefaultAsync(p => p.Servicios.Any(s => s.Id == servicioId));
+            if (profesional == null)
+                return BadRequest("No hay profesional disponible para el servicio seleccionado.");
+            var turno = new Turno
+            {
+                UsuarioId = userId,
+                ServicioId = servicioId,
+                ProfesionalId = profesional.Id,
+                FechaHora = fechaHora,
+                Confirmado = true,
+                TokenQR = Guid.NewGuid().ToString(),
+                FechaExpiracionQR = DateTime.UtcNow.AddHours(3)
+            };
+            _context.Turnos.Add(turno);
+            await _context.SaveChangesAsync();
+            var apiBase = Request.Scheme + "://" + Request.Host.Value;
+            return Ok(new { Id = turno.Id, FechaHora = turno.FechaHora, TokenQR = $"{apiBase}/api/turnos/qr-image?token={turno.TokenQR}" });
+        }
+
         // DELETE: api/turnos/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> CancelarTurno(int id)

@@ -6,6 +6,7 @@ using GestionTurnos.BackEnd.Model.Dto;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using GestionTurnos.BackEnd.Model.Entities;
 
 namespace GestionTurnos.BackEnd.API.Controllers
 {
@@ -42,7 +43,7 @@ namespace GestionTurnos.BackEnd.API.Controllers
                 Email = dto.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = salt,
-                Rol = dto.Rol
+                Rol = Rol.Cliente // Siempre asignar Cliente
             };
 
             _db.Usuarios.Add(usuario);
@@ -114,6 +115,7 @@ namespace GestionTurnos.BackEnd.API.Controllers
         }
     }
 }
+
 
 
 

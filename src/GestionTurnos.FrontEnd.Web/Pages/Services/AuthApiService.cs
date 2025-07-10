@@ -40,8 +40,8 @@ namespace GestionTurnos.FrontEnd.Web.Services
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 Email = usuario.Email,
-                Password = usuario.Password,
-                Rol = usuario.Rol
+                Password = usuario.Password
+                // No enviar Rol, el backend lo asigna
             };
             var response = await _http.PostAsJsonAsync("auth/register", payload);
             return response.IsSuccessStatusCode;
