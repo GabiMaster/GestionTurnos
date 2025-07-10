@@ -1,0 +1,100 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+<div class="row justify-content-center align-items-center min-vh-60">
+    <div class="col-md-8 text-center">
+        <h1 class="display-4 fw-bold mb-3">¡Bienvenido a ReservIt!</h1>
+        <p class="lead mb-4">Gestiona y reserva turnos para cualquier tipo de servicio de forma simple, rápida y desde cualquier lugar.</p>
+    </div>
+</div>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-10">
+        <div id="carouselBeneficios" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
+            <div class="carousel-inner" style="min-height: 220px;">
+                <div class="carousel-item active">
+                    <div class="card shadow-lg border-0 p-4" style="min-height:200px;">
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-4" width="70" height="70" alt="Usuario 1" />
+                            <div class="text-start">
+                                <h5 class="mb-1">Juan P.</h5>
+                                <p class="mb-0">“ReservIt! me ayudó a organizar mis turnos y nunca más olvidé una cita. ¡Muy fácil de usar!”</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="card shadow-lg border-0 p-4" style="min-height:200px;">
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle me-4" width="70" height="70" alt="Usuario 2" />
+                            <div class="text-start">
+                                <h5 class="mb-1">María G.</h5>
+                                <p class="mb-0">“Pude reservar y gestionar mis servicios desde el celular en segundos. ¡Lo recomiendo!”</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="card shadow-lg border-0 p-4" style="min-height:200px;">
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/men/65.jpg" class="rounded-circle me-4" width="70" height="70" alt="Usuario 3" />
+                            <div class="text-start">
+                                <h5 class="mb-1">Carlos R.</h5>
+                                <p class="mb-0">“La mejor forma de mantener mis turnos y servicios organizados. ¡Excelente plataforma!”</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="card shadow-lg border-0 p-4" style="min-height:200px;">
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="rounded-circle me-4" width="70" height="70" alt="Usuario 4" />
+                            <div class="text-start">
+                                <h5 class="mb-1">Lucía S.</h5>
+                                <p class="mb-0">“Reservar un turno nunca fue tan sencillo. El sistema es intuitivo y rápido.”</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="card shadow-lg border-0 p-4" style="min-height:200px;">
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/men/77.jpg" class="rounded-circle me-4" width="70" height="70" alt="Usuario 5" />
+                            <div class="text-start">
+                                <h5 class="mb-1">Federico T.</h5>
+                                <p class="mb-0">“Me permite llevar el control de mis reservas y recibir recordatorios. ¡Muy útil!”</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="card shadow-lg border-0 p-4" style="min-height:200px;">
+                        <div class="d-flex align-items-center">
+                            <img src="https://randomuser.me/api/portraits/women/12.jpg" class="rounded-circle me-4" width="70" height="70" alt="Usuario 6" />
+                            <div class="text-start">
+                                <h5 class="mb-1">Ana L.</h5>
+                                <p class="mb-0">“Ideal para profesionales y clientes. Todo en un solo lugar y sin complicaciones.”</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselBeneficios" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselBeneficios" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-7 text-center">
+        <div class="fs-5 mb-3 text-secondary">¿Estás listo para reservar tus turnos de la manera más eficiente y organizada?</div>
+        <a class="btn btn-primary btn-lg me-2 px-5" asp-page="/Login">Iniciar sesión</a>
+        <a class="btn btn-outline-primary btn-lg px-5" asp-page="/Register">Registrarse</a>
+    </div>
+</div>
