@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using GestionTurnos.BackEnd.API; // Agregado para resolver WeatherForecast
 
 namespace GestionTrunos.BackEnd.API.Controllers
 {

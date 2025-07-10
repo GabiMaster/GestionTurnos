@@ -6,6 +6,7 @@ using GestionTurnos.BackEnd.Data.Contexts;
 using GestionTurnos.BackEnd.Service;
 using GestionTurnos.BackEnd.ServiceDependencies.Interfaces;
 using GestionTurnos.BackEnd.Service.Services;
+using GestionTurnos.BackEnd.API.Services; // Agregado para DummyEmailSender
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-<<<<<<< HEAD
-=======
-builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
->>>>>>> 39cfee4b6e942fec02525b0d8d83cdbd19261576
+builder.Services.AddScoped<IEmailSender, DummyEmailSender>(); // Registro DummyEmailSender
 
 builder.Services.AddAuthentication(options =>
 {

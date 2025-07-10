@@ -24,7 +24,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
         public string? Mensaje { get; set; }
         public bool RequiereLogin { get; set; } = false;
 
-        public TurnosModel(ServicioApiService servicioApi, TurnoApiService turnoApi)
+        public TurnosModel(ServicioApiService servicioApi, TurnoApiService turnoApi, ProfesionalApiService profesionalApi)
         {
             _servicioApi = servicioApi;
             _turnoApi = turnoApi;

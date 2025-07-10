@@ -1,6 +1,5 @@
 ﻿namespace Shared.DTO
 {
-    public class Class1
     public class ServicioDTO
     {
 
@@ -27,3 +26,4 @@
         public DateTime? FechaExpiracionQR { get; set; }
     }
 }
+
