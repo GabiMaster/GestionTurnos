@@ -16,7 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IEmailSender, DummyEmailSender>(); // Registro DummyEmailSender
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>(); // Cambiado a SmtpEmailSender
 
 builder.Services.AddAuthentication(options =>
 {

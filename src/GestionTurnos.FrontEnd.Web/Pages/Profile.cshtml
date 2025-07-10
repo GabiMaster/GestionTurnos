@@ -8,22 +8,9 @@
     <button type="submit" class="btn btn-danger mb-3">Cerrar sesión</button>
 </form>
 <hr />
-<h4>Reestablecer contraseña</h4>
-<form method="post" asp-page-handler="ResetPassword">
-    <div class="mb-3">
-        <label for="passwordActual" class="form-label">Contraseña actual</label>
-        <input type="password" class="form-control" id="passwordActual" name="PasswordActual" required />
-    </div>
-    <div class="mb-3">
-        <label for="nuevaPassword" class="form-label">Nueva contraseña</label>
-        <input type="password" class="form-control" id="nuevaPassword" name="NuevaPassword" required />
-    </div>
-    <div class="mb-3">
-        <label for="confirmarPassword" class="form-label">Confirmar nueva contraseña</label>
-        <input type="password" class="form-control" id="confirmarPassword" name="ConfirmarPassword" required />
-    </div>
-    <button type="submit" class="btn btn-primary">Actualizar contraseña</button>
-</form>
+<div class="mb-3">
+    <a href="/RecuperarPassword" class="btn btn-warning">Recuperar Contraseña</a>
+</div>
 @if (Model.Mensaje != null)
 {
     <div class="alert alert-info mt-3">@Model.Mensaje</div>
