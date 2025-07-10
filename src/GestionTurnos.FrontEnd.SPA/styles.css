@@ -1,0 +1,41 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+.card {
+    border-radius: 1rem;
+}
+.btn {
+    min-width: 100px;
+}
+.list-group-item {
+    font-size: 1.1rem;
+}
+.alert {
+    font-size: 1rem;
+}
+input.form-control {
+    font-size: 1.1rem;
+}
+.mt-4 {
+    margin-top: 2rem !important;
+}
+.mb-4 {
+    margin-bottom: 2rem !important;
+}
+.text-center {
+    text-align: center !important;
+}
+.min-vh-100 {
+    min-height: 100vh !important;
+}
+@media (max-width: 768px) {
+    .card {
+        padding: 1.2rem !important;
+    }
+    h2, h4, h5 {
+        font-size: 1.2rem !important;
+    }
+    .list-group-item {
+        font-size: 1rem;
+    }
+}

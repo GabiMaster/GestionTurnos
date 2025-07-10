@@ -1,0 +1,66 @@
+﻿@page
+@model ServiciosModel
+@{
+    ViewData["Title"] = "Servicios Disponibles";
+}
+@if (Model.RequiereLogin)
+{
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-7">
+            <div class="card shadow-lg border-0 p-4 text-center">
+                <h4 class="mb-3">Acceso restringido</h4>
+                <p class="mb-2">Para ver este apartado necesitas iniciar sesión primero.</p>
+                <p>Si no tienes una cuenta puedes <a asp-page="/Register">registrarte aquí</a>.</p>
+                <a asp-page="/Login" class="btn btn-primary mt-2 px-4">Iniciar sesión</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2 class="mb-4">Servicios Disponibles</h2>
+    @if (Model.EsAdmin)
+    {
+        <a asp-page="/ServiciosCrear" class="btn btn-success mb-3">Agregar Servicio</a>
+    }
+    <table class="table table-hover shadow-sm bg-white rounded">
+        <thead class="table-light">
+            <tr>
+                <th>Nombre</th>
+                <th>Duración</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListadoServicios.Count == 0)
+            {
+                <tr><td colspan="3" class="text-center text-muted">No hay servicios disponibles.</td></tr>
+            }
+            else
+            {
+                @foreach (var s in Model.ListadoServicios)
+                {
+                    <tr>
+                        <td>@s.Nombre</td>
+                        <td>@s.DuracionMinutos minutos</td>
+                        <td>
+                            @if (Model.EsAdmin)
+                            {
+                                <a class="btn btn-sm btn-primary" asp-page="/ServiciosEditar" asp-route-id="@s.Id">Editar</a>
+                                <form method="post" asp-page-handler="Eliminar" asp-route-id="@s.Id" style="display:inline">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar servicio?')">Eliminar</button>
+                                </form>
+                            }
+                            <a class="btn btn-sm btn-success" asp-page="/Turnos" asp-route-servicioId="@s.Id">Agendar</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @if (!string.IsNullOrEmpty(Model.Mensaje))
+    {
+        <div class="alert alert-info mt-2">@Model.Mensaje</div>
+    }
+}
+

@@ -1,0 +1,143 @@
+@page
+@model TurnosModel
+@{
+    ViewData["Title"] = "Turnos";
+    var servicioId = Request.Query["servicioId"].ToString();
+}
+@if (Model.RequiereLogin)
+{
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-7">
+            <div class="card shadow-lg border-0 p-4 text-center">
+                <h4 class="mb-3">Acceso restringido</h4>
+                <p class="mb-2">Para ver este apartado necesitas iniciar sesión primero.</p>
+                <p>Si no tienes una cuenta puedes <a asp-page="/Register">registrarte aquí</a>.</p>
+                <a asp-page="/Login" class="btn btn-primary mt-2 px-4">Iniciar sesión</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2 class="mb-4">Turnos</h2>
+    <div id="turnos-lista" class="mb-4">
+        <h4>Mis turnos</h4>
+        @if (Model.Turnos?.Any() == true)
+        {
+            <table class="table table-bordered table-hover shadow-sm bg-white rounded">
+                <thead class="table-light">
+                    <tr>
+                        <th>Servicio</th>
+                        <th>Profesional</th>
+                        <th>Fecha y Hora</th>
+                        <th>Estado</th>
+                        <th>QR</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var turno in Model.Turnos)
+                {
+                    <tr>
+                        <td>@turno.Servicio?.Nombre</td>
+                        <td>@turno.Profesional?.NombreCompleto</td>
+                        <td>@turno.FechaHora.ToString("g")</td>
+                        <td>@(turno.Confirmado ? "Confirmado" : "Pendiente")</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(turno.TokenQR))
+                            {
+                                <img src="@turno.TokenQR" alt="QR" style="width:80px;height:80px;" />
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="mostrarQRModal('@turno.TokenQR', '@(turno.FechaExpiracionQR?.ToLocalTime().ToString("g") ?? "-")')">Ver QR</button>
+                                @if (turno.FechaExpiracionQR != null)
+                                {
+                                    <div class="small text-muted">Expira: @turno.FechaExpiracionQR.Value.ToLocalTime().ToString("g")</div>
+                                }
+                            }
+                            else
+                            {
+                                <span>No disponible</span>
+                            }
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="Cancelar" asp-route-id="@turno.Id" style="display:inline">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Cancelar turno?')">Cancelar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">No tienes turnos agendados.</div>
+        }
+    </div>
+    <button class="btn btn-success mb-3" onclick="mostrarAgendar()">Agendar nuevo turno</button>
+    <div id="agendar-turno" style="display:none;">
+        <h4>Agendar Turno</h4>
+        <form method="post">
+            <div class="mb-2">
+                <label>Servicio</label>
+                <select asp-for="NuevoTurno.ServicioId" asp-items="Model.ServiciosSelect" class="form-control"></select>
+            </div>
+            <div class="mb-2">
+                <label>Profesional</label>
+                <select asp-for="NuevoTurno.ProfesionalId" class="form-control">
+                    <option value="">Seleccione un profesional</option>
+                    @foreach (var prof in Model.Profesionales.Where(p => Model.NuevoTurno.ServicioId == 0 || (p.ServiciosIds != null && p.ServiciosIds.Contains(Model.NuevoTurno.ServicioId))))
+                    {
+                        <option value="@prof.Id">@prof.NombreCompleto</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-2">
+                <label>Fecha y hora</label>
+                <input asp-for="NuevoTurno.FechaHora" type="datetime-local" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Agendar</button>
+            <button type="button" class="btn btn-secondary" onclick="ocultarAgendar()">Cancelar</button>
+        </form>
+        @if (!string.IsNullOrEmpty(Model.Mensaje))
+        {
+            <div class="alert alert-info mt-2">@Model.Mensaje</div>
+        }
+    </div>
+
+    <!-- Modal para mostrar QR grande -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="qrModalLabel">Código QR del turno</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body text-center">
+            <img id="qrModalImg" src="" alt="QR grande" style="width:300px;height:300px;" />
+            <div class="mt-3">
+                <span class="fw-bold">Expira:</span> <span id="qrModalExpira"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @section Scripts {
+        <script>
+            function mostrarAgendar() {
+                document.getElementById('agendar-turno').style.display = '';
+                document.getElementById('turnos-lista').style.display = 'none';
+            }
+            function ocultarAgendar() {
+                document.getElementById('agendar-turno').style.display = 'none';
+                document.getElementById('turnos-lista').style.display = '';
+            }
+            function mostrarQRModal(qrUrl, expira) {
+                document.getElementById('qrModalImg').src = qrUrl;
+                document.getElementById('qrModalExpira').innerText = expira;
+                var modal = new bootstrap.Modal(document.getElementById('qrModal'));
+                modal.show();
+            }
+        </script>
+    }
+}

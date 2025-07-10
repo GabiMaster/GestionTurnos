@@ -1,0 +1,17 @@
+@page
+@model GestionTurnos.FrontEnd.Web.Pages.ProfileModel
+@{
+    ViewData["Title"] = "Perfil";
+}
+<h2 class="mb-4">Mi Perfil</h2>
+<form method="post" asp-page-handler="Logout">
+    <button type="submit" class="btn btn-danger mb-3">Cerrar sesión</button>
+</form>
+<hr />
+<div class="mb-3">
+    <a href="/RecuperarPassword" class="btn btn-warning">Recuperar Contraseña</a>
+</div>
+@if (Model.Mensaje != null)
+{
+    <div class="alert alert-info mt-3">@Model.Mensaje</div>
+}

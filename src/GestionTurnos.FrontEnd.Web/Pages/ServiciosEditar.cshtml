@@ -1,0 +1,22 @@
+@page "{id:int}"
+@model ServiciosEditarModel
+@{
+    ViewData["Title"] = "Editar Servicio";
+}
+<h2 class="mb-4">Editar Servicio</h2>
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Servicio.Nombre" class="form-label"></label>
+        <input asp-for="Servicio.Nombre" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Servicio.DuracionMinutos" class="form-label"></label>
+        <input asp-for="Servicio.DuracionMinutos" class="form-control" type="number" min="1" />
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a asp-page="/Servicios" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+@if (Model.Mensaje != null)
+{
+    <div class="alert alert-info mt-3">@Model.Mensaje</div>
+}

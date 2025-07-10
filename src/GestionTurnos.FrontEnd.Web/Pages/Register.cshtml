@@ -1,0 +1,38 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registrarse";
+}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 p-4">
+            <h2 class="mb-4 text-center">Registro</h2>
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="Usuario.Nombre" class="form-label"></label>
+                    <input asp-for="Usuario.Nombre" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario.Apellido" class="form-label"></label>
+                    <input asp-for="Usuario.Apellido" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario.Email" class="form-label"></label>
+                    <input asp-for="Usuario.Email" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario.Password" class="form-label"></label>
+                    <input asp-for="Usuario.Password" class="form-control" type="password" />
+                </div>
+                <div class="d-grid mb-2">
+                    <button type="submit" class="btn btn-success btn-lg">Registrarse</button>
+                </div>
+                @if (Model.Mensaje != null)
+                {
+                    <div class="alert alert-info text-center">@Model.Mensaje</div>
+                }
+            </form>
+        </div>
+    </div>
+</div>
+
