@@ -1,5 +1,6 @@
 using GestionTurnos.FrontEnd.Web.Models;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace GestionTurnos.FrontEnd.Web.Services
 {
@@ -30,6 +31,15 @@ namespace GestionTurnos.FrontEnd.Web.Services
             if (!string.IsNullOrEmpty(token))
                 _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _http.PostAsJsonAsync("turnos/agendar", turno);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CancelarTurno(int id)
+        {
+            var token = _context.HttpContext?.Session.GetString("JWT");
+            if (!string.IsNullOrEmpty(token))
+                _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _http.DeleteAsync($"turnos/{id}");
             return response.IsSuccessStatusCode;
         }
     }

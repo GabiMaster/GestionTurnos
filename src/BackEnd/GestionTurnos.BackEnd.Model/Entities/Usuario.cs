@@ -11,4 +11,6 @@ public class Usuario
     public string PasswordHash { get; set; } = string.Empty;
     public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
     public Rol Rol { get; set; }
+    public string? PasswordResetToken { get; set; }
+    public DateTime? PasswordResetTokenExpiration { get; set; }
 }

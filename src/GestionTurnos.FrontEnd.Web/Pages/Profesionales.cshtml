@@ -1,0 +1,33 @@
+@page
+@model GestionTurnos.FrontEnd.Web.Pages.ProfesionalesModel
+@{
+    ViewData["Title"] = "Profesionales";
+}
+<h2 class="mb-4">Profesionales</h2>
+<a asp-page="/ProfesionalesCrear" class="btn btn-success mb-3">Agregar Profesional</a>
+<table class="table table-hover shadow-sm bg-white rounded">
+    <thead class="table-light">
+        <tr>
+            <th>Nombre</th>
+            <th>Especialidad</th>
+            <th>Servicios</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var p in Model.Profesionales)
+    {
+        <tr>
+            <td>@p.NombreCompleto</td>
+            <td>@p.Especialidad</td>
+            <td>@string.Join(", ", p.ServiciosNombres)</td>
+            <td>
+                <a asp-page="/ProfesionalesEditar" asp-route-id="@p.Id" class="btn btn-sm btn-primary">Editar</a>
+                <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.Id" style="display:inline">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar profesional?')">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var isLogged = !string.IsNullOrEmpty(HttpContextAccessor.HttpContext?.Session.GetString("JWT"));
+}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -18,18 +23,27 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="/Login">Iniciar sesión</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="/Register">Registrarse</a>
-                        </li>
+                        @if (!isLogged)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Login">Iniciar sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Register">Registrarse</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Servicios">Servicios</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Turnos">Turnos</a>
                         </li>
+                        @if (isLogged)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Profile">Perfil</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

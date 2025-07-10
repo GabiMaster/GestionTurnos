@@ -52,6 +52,19 @@ namespace GestionTurnos.FrontEnd.Web.Services
             var response = await _http.PostAsJsonAsync("auth/recuperar-password", new { email });
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> ResetPassword(string passwordActual, string nuevaPassword)
+        {
+            var response = await _http.PostAsJsonAsync("auth/reset-password", new { passwordActual, nuevaPassword });
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> ResetPasswordToken(string email, string token, string newPassword)
+        {
+            var payload = new { email, token, newPassword };
+            var response = await _http.PostAsJsonAsync("auth/reset-password", payload);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
 
