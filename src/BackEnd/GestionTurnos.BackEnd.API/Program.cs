@@ -7,6 +7,8 @@ using GestionTurnos.BackEnd.Service;
 using GestionTurnos.BackEnd.ServiceDependencies.Interfaces;
 using GestionTurnos.BackEnd.Service.Services;
 using GestionTurnos.BackEnd.API.Services; // Agregado para DummyEmailSender
+using GestionTurnos.BackEnd.Model.Entities;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,12 +38,54 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
 var app = builder.Build();
 
+// Obtener logger
+var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+
+// 2. Configurar el pipeline
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+// Seed admin user if not exists
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    if (!db.Usuarios.Any(u => u.Rol == Rol.Administrador))
+    {
+        var authService = new AuthService(config);
+        var password = "Admin123!";
+        var hash = authService.HashPassword(password, out var salt);
+        var admin = new Usuario
+        {
+            NombreUsuario = "admin",
+            Nombre = "Admin",
+            Apellido = "Principal",
+            Email = "admin@tudominio.com",
+            PasswordHash = hash,
+            PasswordSalt = salt,
+            Rol = Rol.Administrador
+        };
+        db.Usuarios.Add(admin);
+        db.SaveChanges();
+        logger.LogInformation("Usuario administrador creado automáticamente.");
+    }
+}
+
 // Middleware
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();

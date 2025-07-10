@@ -19,22 +19,48 @@
 else
 {
     <h2 class="mb-4">Servicios Disponibles</h2>
+    @if (Model.EsAdmin)
+    {
+        <a asp-page="/ServiciosCrear" class="btn btn-success mb-3">Agregar Servicio</a>
+    }
     <table class="table table-hover shadow-sm bg-white rounded">
         <thead class="table-light">
             <tr>
                 <th>Nombre</th>
                 <th>Duración</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var s in Model.ListadoServicios)
+            @if (Model.ListadoServicios.Count == 0)
             {
-                <tr>
-                    <td>@s.Nombre</td>
-                    <td>@s.DuracionMinutos minutos</td>
-                </tr>
+                <tr><td colspan="3" class="text-center text-muted">No hay servicios disponibles.</td></tr>
+            }
+            else
+            {
+                @foreach (var s in Model.ListadoServicios)
+                {
+                    <tr>
+                        <td>@s.Nombre</td>
+                        <td>@s.DuracionMinutos minutos</td>
+                        <td>
+                            @if (Model.EsAdmin)
+                            {
+                                <a class="btn btn-sm btn-primary" asp-page="/ServiciosEditar" asp-route-id="@s.Id">Editar</a>
+                                <form method="post" asp-page-handler="Eliminar" asp-route-id="@s.Id" style="display:inline">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar servicio?')">Eliminar</button>
+                                </form>
+                            }
+                            <a class="btn btn-sm btn-success" asp-page="/Turnos" asp-route-servicioId="@s.Id">Agendar</a>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
+    @if (!string.IsNullOrEmpty(Model.Mensaje))
+    {
+        <div class="alert alert-info mt-2">@Model.Mensaje</div>
+    }
 }
 

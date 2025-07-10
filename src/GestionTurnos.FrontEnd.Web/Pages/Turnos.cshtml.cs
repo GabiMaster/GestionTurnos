@@ -31,7 +31,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
             _profesionalApi = profesionalApi;
         }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? servicioId)
         {
             var token = HttpContext.Session.GetString("JWT");
             if (string.IsNullOrEmpty(token))
@@ -42,6 +42,10 @@ namespace GestionTurnos.FrontEnd.Web.Pages
             Servicios = await _servicioApi.ObtenerServicios();
             Profesionales = await _profesionalApi.ObtenerProfesionales();
             Turnos = await _turnoApi.ObtenerTurnosUsuario();
+            if (servicioId.HasValue && Servicios.Any(s => s.Id == servicioId.Value))
+            {
+                NuevoTurno.ServicioId = servicioId.Value;
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()

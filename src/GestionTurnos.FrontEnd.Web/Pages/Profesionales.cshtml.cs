@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using GestionTurnos.FrontEnd.Web.Models;
@@ -10,6 +11,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
         private readonly ProfesionalApiService _profesionalApi;
         private readonly ServicioApiService _servicioApi;
         public List<ProfesionalViewModel> Profesionales { get; set; } = new();
+        public bool EsAdmin { get; set; } = false;
 
         public ProfesionalesModel(ProfesionalApiService profesionalApi, ServicioApiService servicioApi)
         {
@@ -19,6 +21,8 @@ namespace GestionTurnos.FrontEnd.Web.Pages
 
         public async Task OnGetAsync()
         {
+            var rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            EsAdmin = rol == "Administrador";
             var profesionales = await _profesionalApi.ObtenerProfesionales();
             var servicios = await _servicioApi.ObtenerServicios();
             Profesionales = profesionales.Select(p => new ProfesionalViewModel

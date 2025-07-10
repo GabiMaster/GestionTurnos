@@ -1,0 +1,42 @@
+@page
+@model UsuariosCrearModel
+@{
+    ViewData["Title"] = "Crear Usuario";
+}
+<h2 class="mb-4">Crear Usuario</h2>
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Usuario.NombreUsuario" class="form-label"></label>
+        <input asp-for="Usuario.NombreUsuario" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Nombre" class="form-label"></label>
+        <input asp-for="Usuario.Nombre" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Apellido" class="form-label"></label>
+        <input asp-for="Usuario.Apellido" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Email" class="form-label"></label>
+        <input asp-for="Usuario.Email" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Password" class="form-label"></label>
+        <input asp-for="Usuario.Password" class="form-control" type="password" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Rol" class="form-label"></label>
+        <select asp-for="Usuario.Rol" class="form-select">
+            <option value="Administrador">Administrador</option>
+            <option value="Empleado">Empleado</option>
+            <option value="Cliente">Cliente</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Crear</button>
+    <a asp-page="/Index" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+@if (Model.Mensaje != null)
+{
+    <div class="alert alert-info mt-3">@Model.Mensaje</div>
+}

@@ -16,29 +16,31 @@ namespace GestionTurnos.FrontEnd.Web.Services
             _context = context;
         }
 
-        public async Task<List<Turno>> ObtenerTurnosUsuario()
+        private void SetAuthorizationHeader()
         {
             var token = _context.HttpContext?.Session.GetString("JWT");
+            _http.DefaultRequestHeaders.Authorization = null;
             if (!string.IsNullOrEmpty(token))
                 _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        public async Task<List<Turno>> ObtenerTurnosUsuario()
+        {
+            SetAuthorizationHeader();
             var result = await _http.GetFromJsonAsync<List<Turno>>("turnos/mis-turnos");
             return result ?? new List<Turno>();
         }
 
         public async Task<bool> AgendarTurno(Turno turno)
         {
-            var token = _context.HttpContext?.Session.GetString("JWT");
-            if (!string.IsNullOrEmpty(token))
-                _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            SetAuthorizationHeader();
             var response = await _http.PostAsJsonAsync("turnos/agendar", turno);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> CancelarTurno(int id)
         {
-            var token = _context.HttpContext?.Session.GetString("JWT");
-            if (!string.IsNullOrEmpty(token))
-                _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            SetAuthorizationHeader();
             var response = await _http.DeleteAsync($"turnos/{id}");
             return response.IsSuccessStatusCode;
         }

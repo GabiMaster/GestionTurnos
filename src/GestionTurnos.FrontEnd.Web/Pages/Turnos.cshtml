@@ -2,6 +2,7 @@
 @model TurnosModel
 @{
     ViewData["Title"] = "Turnos";
+    var servicioId = Request.Query["servicioId"].ToString();
 }
 @if (Model.RequiereLogin)
 {
@@ -45,7 +46,11 @@ else
                         <td>
                             @if (!string.IsNullOrEmpty(turno.TokenQR))
                             {
-                                <img src="data:image/png;base64,@turno.TokenQR" alt="QR" style="width:80px;" />
+                                <div style="width:80px; height:80px;">@Html.Raw(turno.TokenQR)</div>
+                                @if (turno.FechaExpiracionQR != null)
+                                {
+                                    <div class="small text-muted">Expira: @turno.FechaExpiracionQR.Value.ToLocalTime().ToString("g")</div>
+                                }
                             }
                             else
                             {
@@ -77,7 +82,13 @@ else
             </div>
             <div class="mb-2">
                 <label>Profesional</label>
-                <select asp-for="NuevoTurno.ProfesionalId" asp-items="Model.ProfesionalesSelect" class="form-control"></select>
+                <select asp-for="NuevoTurno.ProfesionalId" class="form-control">
+                    <option value="">Seleccione un profesional</option>
+                    @foreach (var prof in Model.Profesionales.Where(p => Model.NuevoTurno.ServicioId == 0 || (p.ServiciosIds != null && p.ServiciosIds.Contains(Model.NuevoTurno.ServicioId))))
+                    {
+                        <option value="@prof.Id">@prof.NombreCompleto</option>
+                    }
+                </select>
             </div>
             <div class="mb-2">
                 <label>Fecha y hora</label>

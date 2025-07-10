@@ -4,6 +4,10 @@ using GestionTurnos.BackEnd.Data.Contexts;
 using GestionTurnos.BackEnd.Model.Entities;
 using Shared.DTO;
 using System.Security.Claims;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace GestionTrunos.BackEnd.API.Controllers
 {
@@ -12,10 +16,12 @@ namespace GestionTrunos.BackEnd.API.Controllers
     public class TurnosController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _config;
 
-        public TurnosController(AppDbContext context)
+        public TurnosController(AppDbContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         // GET: api/turnos/mis-turnos
@@ -33,10 +39,36 @@ namespace GestionTrunos.BackEnd.API.Controllers
             return turnos;
         }
 
+        // GET: api/turnos/validar-qr?token=...
+        [HttpGet("validar-qr")]
+        public async Task<IActionResult> ValidarQR([FromQuery] string token)
+        {
+            var turno = await _context.Turnos
+                .Include(t => t.Servicio)
+                .Include(t => t.Profesional)
+                .FirstOrDefaultAsync(t => t.TokenQR == token);
+            if (turno == null || turno.FechaExpiracionQR < DateTime.UtcNow)
+                return BadRequest("QR inválido o expirado");
+            // Aquí podrías marcar asistencia si lo deseas
+            return Ok(new {
+                turno.Id,
+                turno.FechaHora,
+                turno.Confirmado,
+                turno.Servicio,
+                turno.Profesional,
+                turno.FechaExpiracionQR
+            });
+        }
+
         // POST: api/turnos/agendar
         [HttpPost("agendar")]
         public async Task<IActionResult> AgendarTurno([FromBody] TurnoDTO dto)
         {
+            // Obtener el id del usuario autenticado
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdStr, out int userId))
+                return Unauthorized();
+
             // Validar solapamiento
             var profesionalTurnos = await _context.Turnos
                 .Where(t => t.ProfesionalId == dto.ProfesionalId &&
@@ -48,7 +80,7 @@ namespace GestionTrunos.BackEnd.API.Controllers
 
             var turno = new Turno
             {
-                UsuarioId = dto.UsuarioId,
+                UsuarioId = userId, // Usar el id autenticado
                 ServicioId = dto.ServicioId,
                 ProfesionalId = dto.ProfesionalId,
                 FechaHora = dto.FechaHora,
@@ -71,6 +103,28 @@ namespace GestionTrunos.BackEnd.API.Controllers
             _context.Turnos.Remove(turno);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        // PATCH: api/turnos/confirmar-asistencia?token=...
+        [HttpPatch("confirmar-asistencia")]
+        public async Task<IActionResult> ConfirmarAsistencia([FromQuery] string token)
+        {
+            var turno = await _context.Turnos.FirstOrDefaultAsync(t => t.TokenQR == token);
+            if (turno == null || turno.FechaExpiracionQR < DateTime.UtcNow)
+                return BadRequest("QR inválido o expirado");
+            if (turno.Confirmado)
+                return BadRequest("La asistencia ya fue confirmada.");
+            turno.Confirmado = true;
+            await _context.SaveChangesAsync();
+            return Ok(new { mensaje = "Asistencia confirmada", turno.Id, turno.FechaHora });
+        }
+
+        private string GenerarQRBase64(string url)
+        {
+            using var qrGenerator = new QRCodeGenerator();
+            using var qrData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+            var svgQr = new SvgQRCode(qrData);
+            return svgQr.GetGraphic(4);
         }
     }
 }

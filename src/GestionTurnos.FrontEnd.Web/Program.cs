@@ -1,4 +1,6 @@
 using GestionTurnos.FrontEnd.Web.Services;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,27 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession(); // ? middleware de sesión
+app.UseSession(); // <-- Mover antes del middleware personalizado
+
+// Middleware para poblar HttpContext.User desde el JWT en sesión
+app.Use(async (context, next) =>
+{
+    var session = context.Session;
+    var token = session.GetString("JWT");
+    if (!string.IsNullOrEmpty(token))
+    {
+        var handler = new JwtSecurityTokenHandler();
+        try
+        {
+            var jwt = handler.ReadJwtToken(token);
+            var claims = jwt.Claims.ToList();
+            var identity = new ClaimsIdentity(claims, "jwt");
+            context.User = new ClaimsPrincipal(identity);
+        }
+        catch { /* Token inválido, ignorar */ }
+    }
+    await next();
+});
 
 app.UseAuthorization();
 

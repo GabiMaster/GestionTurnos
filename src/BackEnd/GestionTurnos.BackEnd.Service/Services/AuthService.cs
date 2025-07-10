@@ -45,7 +45,8 @@ namespace GestionTurnos.BackEnd.Service.Services
             {
                 new Claim(ClaimTypes.Name, usuario.NombreUsuario),
                 new Claim(ClaimTypes.Email, usuario.Email),
-                new Claim(ClaimTypes.Role, usuario.Rol.ToString())
+                new Claim(ClaimTypes.Role, usuario.Rol.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()) // <--- Asegura que el claim esté presente
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));

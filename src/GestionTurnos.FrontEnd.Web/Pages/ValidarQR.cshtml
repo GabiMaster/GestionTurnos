@@ -1,0 +1,31 @@
+@page
+@model ValidarQRModel
+@{
+    ViewData["Title"] = "Validar QR";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 p-4 text-center">
+                <h2 class="mb-4">Validación de Turno</h2>
+                @if (Model.Error != null)
+                {
+                    <div class="alert alert-danger">@Model.Error</div>
+                }
+                else if (Model.Mensaje != null)
+                {
+                    <div class="alert alert-success">@Model.Mensaje</div>
+                    <div class="mt-3">
+                        <strong>Servicio:</strong> @Model.Servicio <br />
+                        <strong>Profesional:</strong> @Model.Profesional <br />
+                        <strong>Fecha y hora:</strong> @Model.FechaHora?.ToString("g")
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">Validando QR...</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
