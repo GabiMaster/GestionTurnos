@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GestionTurnos.FrontEnd.Web.Models;
+using Shared.DTO;
 
 namespace GestionTurnos.FrontEnd.Web.Services
 {
@@ -12,7 +13,7 @@ namespace GestionTurnos.FrontEnd.Web.Services
         public AuthApiService(HttpClient http)
         {
             _http = http;
-            _http.BaseAddress = new Uri("https://localhost:7087/api/"); // Cambiar si tu API usa otro puerto
+            _http.BaseAddress = new Uri("https://localhost:44329/api/");
         }
 
         public async Task<string?> Login(string email, string password)
@@ -33,13 +34,14 @@ namespace GestionTurnos.FrontEnd.Web.Services
 
         public async Task<bool> Register(Usuario usuario)
         {
-            // El backend espera PasswordHash, no Password
             var payload = new
             {
-                usuario.NombreCompleto,
-                usuario.Email,
-                PasswordHash = usuario.Password, // El backend lo hashea
-                Rol = 0 // Puedes ajustar el rol si es necesario
+                Usuario = usuario.NombreUsuario,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                Email = usuario.Email,
+                Password = usuario.Password,
+                Rol = usuario.Rol
             };
             var response = await _http.PostAsJsonAsync("auth/register", payload);
             return response.IsSuccessStatusCode;

@@ -10,4 +10,3 @@ namespace GestionTurnos.BackEnd.Model.Entities
         Cliente
     }
 }
-

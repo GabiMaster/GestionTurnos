@@ -8,8 +8,16 @@
 
 <form method="post">
     <div>
-        <label asp-for="Usuario.NombreCompleto"></label>
-        <input asp-for="Usuario.NombreCompleto" class="form-control" />
+        <label asp-for="Usuario.NombreUsuario"></label>
+        <input asp-for="Usuario.NombreUsuario" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Usuario.Nombre"></label>
+        <input asp-for="Usuario.Nombre" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Usuario.Apellido"></label>
+        <input asp-for="Usuario.Apellido" class="form-control" />
     </div>
     <div>
         <label asp-for="Usuario.Email"></label>
@@ -20,9 +28,16 @@
         <input asp-for="Usuario.Password" class="form-control" type="password" />
     </div>
     <div>
+        <label asp-for="Usuario.Rol"></label>
+        <select asp-for="Usuario.Rol" class="form-control">
+            <option value="0">Cliente</option>
+            <option value="1">Empleado</option>
+            <option value="2">Administrador</option>
+        </select>
+    </div>
+    <div>
         <button type="submit" class="btn btn-success">Registrarse</button>
     </div>
-
     @if (Model.Mensaje != null)
     {
         <div class="text-info">@Model.Mensaje</div>

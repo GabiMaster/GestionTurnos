@@ -11,7 +11,7 @@ namespace GestionTurnos.FrontEnd.Web.Services
         public ServicioApiService(HttpClient http, IHttpContextAccessor context)
         {
             _http = http;
-            _http.BaseAddress = new Uri("https://localhost:7139/api/");
+            _http.BaseAddress = new Uri("https://localhost:44329/api/");
             _context = context;
         }
 

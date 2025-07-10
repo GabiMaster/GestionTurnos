@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using GestionTurnos.BackEnd.Model.Entities;
 using GestionTurnos.BackEnd.ServiceDependencies.Interfaces;
 using GestionTurnos.BackEnd.Data.Contexts;
 using Shared.DTO;
@@ -33,6 +32,7 @@ namespace GestionTurnos.BackEnd.API.Controllers
             {
                 NombreUsuario = dto.Usuario,
                 Nombre = dto.Nombre,
+                Apellido = dto.Apellido,
                 Email = dto.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = salt,
@@ -66,12 +66,9 @@ namespace GestionTurnos.BackEnd.API.Controllers
         [HttpPost("recuperar-password")]
         public IActionResult RecuperarPassword([FromBody] RecuperarPasswordRequest request)
         {
-            // Simulación: en un caso real, deberías enviar un email con un enlace de recuperación
             var user = _db.Usuarios.SingleOrDefault(u => u.Email == request.Email);
             if (user == null)
                 return Ok(); // No revelar si el email existe
-            // Aquí deberías generar un token y enviarlo por email
-            // Por ahora, solo simula éxito
             return Ok();
         }
 
