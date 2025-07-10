@@ -3,37 +3,53 @@
 @{
     ViewData["Title"] = "Profesionales";
 }
-<h2 class="mb-4">Profesionales</h2>
-@if (Model.EsAdmin)
+@if (Model.RequiereLogin)
 {
-    <a asp-page="/ProfesionalesCrear" class="btn btn-success mb-3">Agregar Profesional</a>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-7">
+            <div class="card shadow-lg border-0 p-4 text-center">
+                <h4 class="mb-3">Acceso restringido</h4>
+                <p class="mb-2">Para ver este apartado necesitas iniciar sesión primero.</p>
+                <p>Si no tienes una cuenta puedes <a asp-page="/Register">registrarte aquí</a>.</p>
+                <a asp-page="/Login" class="btn btn-primary mt-2 px-4">Iniciar sesión</a>
+            </div>
+        </div>
+    </div>
 }
-<table class="table table-hover shadow-sm bg-white rounded">
-    <thead class="table-light">
-        <tr>
-            <th>Nombre</th>
-            <th>Especialidad</th>
-            <th>Servicios</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var p in Model.Profesionales)
+else
+{
+    <h2 class="mb-4">Profesionales</h2>
+    @if (Model.EsAdmin)
     {
-        <tr>
-            <td>@p.NombreCompleto</td>
-            <td>@p.Especialidad</td>
-            <td>@string.Join(", ", p.ServiciosNombres)</td>
-            <td>
-                @if (Model.EsAdmin)
-                {
-                    <a asp-page="/ProfesionalesEditar" asp-route-id="@p.Id" class="btn btn-sm btn-primary">Editar</a>
-                    <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.Id" style="display:inline">
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar profesional?')">Eliminar</button>
-                    </form>
-                }
-            </td>
-        </tr>
+        <a asp-page="/ProfesionalesCrear" class="btn btn-success mb-3">Agregar Profesional</a>
     }
-    </tbody>
-</table>
+    <table class="table table-hover shadow-sm bg-white rounded">
+        <thead class="table-light">
+            <tr>
+                <th>Nombre</th>
+                <th>Especialidad</th>
+                <th>Servicios</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model.Profesionales)
+        {
+            <tr>
+                <td>@p.NombreCompleto</td>
+                <td>@p.Especialidad</td>
+                <td>@string.Join(", ", p.ServiciosNombres)</td>
+                <td>
+                    @if (Model.EsAdmin)
+                    {
+                        <a asp-page="/ProfesionalesEditar" asp-route-id="@p.Id" class="btn btn-sm btn-primary">Editar</a>
+                        <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.Id" style="display:inline">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar profesional?')">Eliminar</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

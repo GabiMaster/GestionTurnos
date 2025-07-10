@@ -46,7 +46,8 @@ else
                         <td>
                             @if (!string.IsNullOrEmpty(turno.TokenQR))
                             {
-                                <div style="width:80px; height:80px;">@Html.Raw(turno.TokenQR)</div>
+                                <img src="@turno.TokenQR" alt="QR" style="width:80px;height:80px;" />
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="mostrarQRModal('@turno.TokenQR', '@(turno.FechaExpiracionQR?.ToLocalTime().ToString("g") ?? "-")')">Ver QR</button>
                                 @if (turno.FechaExpiracionQR != null)
                                 {
                                     <div class="small text-muted">Expira: @turno.FechaExpiracionQR.Value.ToLocalTime().ToString("g")</div>
@@ -102,6 +103,25 @@ else
             <div class="alert alert-info mt-2">@Model.Mensaje</div>
         }
     </div>
+
+    <!-- Modal para mostrar QR grande -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="qrModalLabel">Código QR del turno</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body text-center">
+            <img id="qrModalImg" src="" alt="QR grande" style="width:300px;height:300px;" />
+            <div class="mt-3">
+                <span class="fw-bold">Expira:</span> <span id="qrModalExpira"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     @section Scripts {
         <script>
             function mostrarAgendar() {
@@ -111,6 +131,12 @@ else
             function ocultarAgendar() {
                 document.getElementById('agendar-turno').style.display = 'none';
                 document.getElementById('turnos-lista').style.display = '';
+            }
+            function mostrarQRModal(qrUrl, expira) {
+                document.getElementById('qrModalImg').src = qrUrl;
+                document.getElementById('qrModalExpira').innerText = expira;
+                var modal = new bootstrap.Modal(document.getElementById('qrModal'));
+                modal.show();
             }
         </script>
     }

@@ -12,6 +12,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
         private readonly ServicioApiService _servicioApi;
         public List<ProfesionalViewModel> Profesionales { get; set; } = new();
         public bool EsAdmin { get; set; } = false;
+        public bool RequiereLogin { get; set; } = false;
 
         public ProfesionalesModel(ProfesionalApiService profesionalApi, ServicioApiService servicioApi)
         {
@@ -21,6 +22,12 @@ namespace GestionTurnos.FrontEnd.Web.Pages
 
         public async Task OnGetAsync()
         {
+            var token = HttpContext.Session.GetString("JWT");
+            if (string.IsNullOrEmpty(token))
+            {
+                RequiereLogin = true;
+                return;
+            }
             var rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
             EsAdmin = rol == "Administrador";
             var profesionales = await _profesionalApi.ObtenerProfesionales();
