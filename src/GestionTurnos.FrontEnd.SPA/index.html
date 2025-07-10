@@ -12,33 +12,22 @@
         <header>
             <h1>ReservIt! SPA</h1>
             <template x-if="!jwt">
-                <div>
-                    <form @submit.prevent="login" class="login-form">
-                        <h2>Iniciar sesión</h2>
-                        <input type="email" x-model="loginData.email" placeholder="Email" required autocomplete="username">
-                        <input type="password" x-model="loginData.password" placeholder="Contraseña" required autocomplete="current-password">
-                        <button type="submit" :disabled="loading">Entrar</button>
-                        <div class="error" x-text="mensaje" x-show="mensaje"></div>
-                    </form>
-                    <button class="btn-link" @click="showRegister = true">¿No tienes cuenta? Regístrate</button>
-                </div>
+                <form @submit.prevent="login" class="login-form">
+                    <h2>Iniciar sesi�n</h2>
+                    <input type="email" x-model="loginData.email" placeholder="Email" required>
+                    <input type="password" x-model="loginData.password" placeholder="Contrase�a" required>
+                    <button type="submit" :disabled="loading">Entrar</button>
+                    <div class="error" x-text="mensaje" x-show="mensaje"></div>
+                </form>
             </template>
             <template x-if="jwt">
                 <div class="user-bar">
-                    <span>Sesión iniciada</span>
-                    <button @click="logout">Cerrar sesión</button>
+                    <span>Sesi�n iniciada</span>
+                    <button @click="logout">Cerrar sesi�n</button>
                 </div>
             </template>
         </header>
         <main x-show="jwt">
-            <section>
-                <h2>Servicios Disponibles</h2>
-                <ul>
-                    <template x-for="s in servicios" :key="s.id">
-                        <li><span x-text="s.nombre"></span> (<span x-text="s.duracionMinutos"></span> minutos)</li>
-                    </template>
-                </ul>
-            </section>
             <section>
                 <h2>Agendar Turno</h2>
                 <div>
@@ -55,7 +44,7 @@
                     <input type="datetime-local" x-model="nuevoTurno.fechaHora">
                 </div>
                 <button @click="agendarTurno" :disabled="loading || !nuevoTurno.servicioId || !nuevoTurno.fechaHora">
-                    <span x-show="loading">⏳</span> Agendar
+                    <span x-show="loading">?</span> Agendar
                 </button>
                 <div class="info" x-text="mensaje" x-show="mensaje"></div>
                 <template x-if="qrUrl">
@@ -65,54 +54,7 @@
                     </div>
                 </template>
             </section>
-            <section>
-                <h2>Mis Turnos</h2>
-                <template x-if="turnos.length === 0">
-                    <div class="info">No tienes turnos agendados.</div>
-                </template>
-                <table x-show="turnos.length > 0" class="turnos-table">
-                    <thead>
-                        <tr>
-                            <th>Servicio</th>
-                            <th>Fecha y Hora</th>
-                            <th>QR</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="t in turnos" :key="t.id">
-                            <tr>
-                                <td x-text="t.servicio?.nombre || ''"></td>
-                                <td x-text="formatFechaHora(t.fechaHora)"></td>
-                                <td>
-                                    <template x-if="t.tokenQR">
-                                        <img :src="t.tokenQR" alt="QR" style="width:60px;height:60px;" />
-                                    </template>
-                                </td>
-                                <td>
-                                    <button @click="cancelarTurno(t.id)" :disabled="loading">Cancelar</button>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </section>
         </main>
-        <div class="modal" x-show="showRegister">
-            <div class="modal-content">
-                <form @submit.prevent="register">
-                    <h2>Registro</h2>
-                    <input type="text" x-model="registerData.usuario" placeholder="Usuario" required>
-                    <input type="text" x-model="registerData.nombre" placeholder="Nombre" required>
-                    <input type="text" x-model="registerData.apellido" placeholder="Apellido" required>
-                    <input type="email" x-model="registerData.email" placeholder="Email" required>
-                    <input type="password" x-model="registerData.password" placeholder="Contraseña" required>
-                    <button type="submit" :disabled="loading">Registrarse</button>
-                    <div class="info" x-text="mensajeRegistro" x-show="mensajeRegistro"></div>
-                    <button type="button" @click="showRegister = false">Cerrar</button>
-                </form>
-            </div>
-        </div>
     </div>
     <script src="app.js"></script>
 </body>
