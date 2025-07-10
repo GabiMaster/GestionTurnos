@@ -57,8 +57,9 @@ namespace GestionTrunos.BackEnd.API.Controllers
         [HttpGet("qr-image")]
         public IActionResult GetQRImage([FromQuery] string token)
         {
-            var baseUrl = _config["FrontendUrl"] ?? "https://localhost:7087";
-            var url = $"{baseUrl}/Turnos/ValidarQR?token={token}";
+            // Usar siempre la URL base del frontend para el QR, forzando el puerto 7298
+            var baseUrl = _config["FrontendUrl"] ?? "https://localhost:7298";
+            var url = $"{baseUrl}/ValidarQR?token={token}";
             var qrWriter = new ZXing.BarcodeWriterPixelData
             {
                 Format = ZXing.BarcodeFormat.QR_CODE,
