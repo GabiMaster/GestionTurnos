@@ -1,24 +1,32 @@
 ﻿@page
 @model GestionTurnos.FrontEnd.Web.Pages.LoginModel
 @{
-	ViewData["Title"] = "Iniciar sesión";
+    ViewData["Title"] = "Iniciar sesión";
 }
-<h2>Iniciar sesión</h2>
-
-<form method="post">
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 p-4">
+            <h2 class="mb-4 text-center">Iniciar sesión</h2>
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" type="password" />
+                </div>
+                <div class="d-grid mb-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
+                </div>
+                @if (Model.MensajeError != null)
+                {
+                    <div class="alert alert-danger text-center">@Model.MensajeError</div>
+                }
+            </form>
+            <div class="text-center mt-3">
+                <a asp-page="/RecuperarPassword">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
     </div>
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" type="password" />
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary">Ingresar</button>
-    </div>
-    @if (Model.MensajeError != null)
-    {
-        <div class="text-danger">@Model.MensajeError</div>
-    }
-</form>
+</div>

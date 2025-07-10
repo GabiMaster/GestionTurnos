@@ -3,44 +3,32 @@
 @{
     ViewData["Title"] = "Registrarse";
 }
-
-<h2>Registro</h2>
-
-<form method="post">
-    <div>
-        <label asp-for="Usuario.NombreUsuario"></label>
-        <input asp-for="Usuario.NombreUsuario" class="form-control" />
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 p-4">
+            <h2 class="mb-4 text-center">Registro</h2>
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="Usuario.NombreCompleto" class="form-label"></label>
+                    <input asp-for="Usuario.NombreCompleto" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario.Email" class="form-label"></label>
+                    <input asp-for="Usuario.Email" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario.Password" class="form-label"></label>
+                    <input asp-for="Usuario.Password" class="form-control" type="password" />
+                </div>
+                <div class="d-grid mb-2">
+                    <button type="submit" class="btn btn-success btn-lg">Registrarse</button>
+                </div>
+                @if (Model.Mensaje != null)
+                {
+                    <div class="alert alert-info text-center">@Model.Mensaje</div>
+                }
+            </form>
+        </div>
     </div>
-    <div>
-        <label asp-for="Usuario.Nombre"></label>
-        <input asp-for="Usuario.Nombre" class="form-control" />
-    </div>
-    <div>
-        <label asp-for="Usuario.Apellido"></label>
-        <input asp-for="Usuario.Apellido" class="form-control" />
-    </div>
-    <div>
-        <label asp-for="Usuario.Email"></label>
-        <input asp-for="Usuario.Email" class="form-control" />
-    </div>
-    <div>
-        <label asp-for="Usuario.Password"></label>
-        <input asp-for="Usuario.Password" class="form-control" type="password" />
-    </div>
-    <div>
-        <label asp-for="Usuario.Rol"></label>
-        <select asp-for="Usuario.Rol" class="form-control">
-            <option value="0">Cliente</option>
-            <option value="1">Empleado</option>
-            <option value="2">Administrador</option>
-        </select>
-    </div>
-    <div>
-        <button type="submit" class="btn btn-success">Registrarse</button>
-    </div>
-    @if (Model.Mensaje != null)
-    {
-        <div class="text-info">@Model.Mensaje</div>
-    }
-</form>
+</div>
 

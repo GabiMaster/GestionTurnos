@@ -3,24 +3,38 @@
 @{
     ViewData["Title"] = "Servicios Disponibles";
 }
-
-<h2>Servicios Disponibles</h2>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Duración</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var s in Model.ListadoServicios)
-        {
+@if (Model.RequiereLogin)
+{
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-7">
+            <div class="card shadow-lg border-0 p-4 text-center">
+                <h4 class="mb-3">Acceso restringido</h4>
+                <p class="mb-2">Para ver este apartado necesitas iniciar sesión primero.</p>
+                <p>Si no tienes una cuenta puedes <a asp-page="/Register">registrarte aquí</a>.</p>
+                <a asp-page="/Login" class="btn btn-primary mt-2 px-4">Iniciar sesión</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2 class="mb-4">Servicios Disponibles</h2>
+    <table class="table table-hover shadow-sm bg-white rounded">
+        <thead class="table-light">
             <tr>
-                <td>@s.Nombre</td>
-                <td>@s.DuracionMinutos minutos</td>
+                <th>Nombre</th>
+                <th>Duración</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var s in Model.ListadoServicios)
+            {
+                <tr>
+                    <td>@s.Nombre</td>
+                    <td>@s.DuracionMinutos minutos</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 

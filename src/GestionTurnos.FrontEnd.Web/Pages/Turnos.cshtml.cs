@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using GestionTurnos.FrontEnd.Web.Models;
 using GestionTurnos.FrontEnd.Web.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace GestionTurnos.FrontEnd.Web.Pages
 {
     public class TurnosModel : PageModel
     {
         private readonly ServicioApiService _servicioApi;
-        // Suponiendo que habrá un TurnoApiService para obtener/agendar turnos
         private readonly TurnoApiService _turnoApi;
 
         public List<Turno> Turnos { get; set; } = new();
@@ -19,6 +19,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
         [BindProperty]
         public Turno NuevoTurno { get; set; } = new();
         public string? Mensaje { get; set; }
+        public bool RequiereLogin { get; set; } = false;
 
         public TurnosModel(ServicioApiService servicioApi, TurnoApiService turnoApi)
         {
@@ -28,12 +29,24 @@ namespace GestionTurnos.FrontEnd.Web.Pages
 
         public async Task OnGetAsync()
         {
+            var token = HttpContext.Session.GetString("JWT");
+            if (string.IsNullOrEmpty(token))
+            {
+                RequiereLogin = true;
+                return;
+            }
             Servicios = await _servicioApi.ObtenerServicios();
             Turnos = await _turnoApi.ObtenerTurnosUsuario();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var token = HttpContext.Session.GetString("JWT");
+            if (string.IsNullOrEmpty(token))
+            {
+                RequiereLogin = true;
+                return Page();
+            }
             Servicios = await _servicioApi.ObtenerServicios();
             var resultado = await _turnoApi.AgendarTurno(NuevoTurno);
             if (resultado)
