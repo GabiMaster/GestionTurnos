@@ -9,6 +9,7 @@ using GestionTurnos.BackEnd.Service.Services;
 using GestionTurnos.BackEnd.API.Services; // Agregado para DummyEmailSender
 using GestionTurnos.BackEnd.Model.Entities;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,17 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
+
+// CORS para permitir SPA en localhost:3000
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpa", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -86,6 +98,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Habilitar CORS para SPA
+app.UseCors("AllowSpa");
 
 app.UseAuthentication();
 app.UseAuthorization();
