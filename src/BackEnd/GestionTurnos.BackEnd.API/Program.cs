@@ -6,9 +6,8 @@ using GestionTurnos.BackEnd.Data.Contexts;
 using GestionTurnos.BackEnd.Service;
 using GestionTurnos.BackEnd.ServiceDependencies.Interfaces;
 using GestionTurnos.BackEnd.Service.Services;
-using GestionTurnos.BackEnd.API.Services; // Agregado para DummyEmailSender
+using GestionTurnos.BackEnd.API.Services;
 using GestionTurnos.BackEnd.Model.Entities;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IEmailSender, SmtpEmailSender>(); // Cambiado a SmtpEmailSender
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -54,16 +53,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Obtener logger
-var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
-
-// 2. Configurar el pipeline
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
-}
-// Seed admin user if not exists
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -85,11 +74,9 @@ using (var scope = app.Services.CreateScope())
         };
         db.Usuarios.Add(admin);
         db.SaveChanges();
-        logger.LogInformation("Usuario administrador creado automáticamente.");
     }
 }
 
-// Middleware
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

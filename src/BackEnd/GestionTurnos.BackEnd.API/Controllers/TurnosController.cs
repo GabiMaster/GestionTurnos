@@ -112,12 +112,10 @@ namespace GestionTrunos.BackEnd.API.Controllers
         [HttpPost("agendar")]
         public async Task<IActionResult> AgendarTurno([FromBody] TurnoDTO dto)
         {
-            // Obtener el id del usuario autenticado
             var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdStr, out int userId))
                 return Unauthorized();
 
-            // Validar solapamiento
             var profesionalTurnos = await _context.Turnos
                 .Where(t => t.ProfesionalId == dto.ProfesionalId &&
                             t.FechaHora < dto.FechaHora.AddMinutes(30) &&
@@ -128,17 +126,16 @@ namespace GestionTrunos.BackEnd.API.Controllers
 
             var turno = new Turno
             {
-                UsuarioId = userId, // Usar el id autenticado
+                UsuarioId = userId,
                 ServicioId = dto.ServicioId,
                 ProfesionalId = dto.ProfesionalId,
                 FechaHora = dto.FechaHora,
-                Confirmado = true, // Confirmado por defecto
+                Confirmado = true,
                 TokenQR = Guid.NewGuid().ToString(),
-                FechaExpiracionQR = DateTime.UtcNow.AddHours(3) // Ahora expira en 3 horas
+                FechaExpiracionQR = DateTime.UtcNow.AddHours(3)
             };
             _context.Turnos.Add(turno);
             await _context.SaveChangesAsync();
-            // TODO: Enviar email de confirmación
             return Ok(turno);
         }
 
