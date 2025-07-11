@@ -22,8 +22,8 @@ namespace GestionTurnos.FrontEnd.Web.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var result = await _authService.Register(Usuario);
-            Mensaje = result ? "Usuario creado correctamente." : "Error al crear usuario.";
+            var (result, errorMsg) = await _authService.RegisterWithError(Usuario);
+            Mensaje = result ? "Usuario creado correctamente." : errorMsg;
             if (result) return RedirectToPage("/Index");
             return Page();
         }

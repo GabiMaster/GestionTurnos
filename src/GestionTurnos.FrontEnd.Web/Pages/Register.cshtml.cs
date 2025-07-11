@@ -11,20 +11,19 @@ namespace GestionTurnos.FrontEnd.Web.Pages
 
         [BindProperty]
         public Usuario Usuario { get; set; } = new Usuario();
-
         public string? Mensaje { get; set; }
+        public string? MensajeError { get; set; }
 
         public RegisterModel(AuthApiService authService)
         {
             _authService = authService;
         }
 
-        public void OnGet() { }
-
         public async Task<IActionResult> OnPostAsync()
         {
-            var result = await _authService.Register(Usuario);
-            Mensaje = result ? "Usuario registrado con éxito" : "Error al registrar";
+            var (result, errorMsg) = await _authService.RegisterWithError(Usuario);
+            Mensaje = result ? "Usuario registrado con éxito" : null;
+            MensajeError = !result ? errorMsg : null;
             return Page();
         }
     }

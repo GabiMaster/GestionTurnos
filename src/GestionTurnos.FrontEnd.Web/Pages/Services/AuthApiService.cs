@@ -2,7 +2,6 @@
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GestionTurnos.FrontEnd.Web.Models;
-using Shared.DTO;
 
 namespace GestionTurnos.FrontEnd.Web.Services
 {
@@ -27,12 +26,12 @@ namespace GestionTurnos.FrontEnd.Web.Services
             return result?.Token;
         }
 
-        public class JwtResponse
+        private class JwtResponse
         {
             public string Token { get; set; } = "";
         }
 
-        public async Task<bool> Register(Usuario usuario)
+        public async Task<(bool, string?)> RegisterWithError(Usuario usuario)
         {
             var payload = new
             {
@@ -41,21 +40,17 @@ namespace GestionTurnos.FrontEnd.Web.Services
                 Apellido = usuario.Apellido,
                 Email = usuario.Email,
                 Password = usuario.Password
-                // No enviar Rol, el backend lo asigna
             };
             var response = await _http.PostAsJsonAsync("auth/register", payload);
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+                return (true, null);
+            var errorMsg = await response.Content.ReadAsStringAsync();
+            return (false, errorMsg);
         }
 
         public async Task<bool> RecuperarPassword(string email)
         {
             var response = await _http.PostAsJsonAsync("auth/recuperar-password", new { email });
-            return response.IsSuccessStatusCode;
-        }
-
-        public async Task<bool> ResetPassword(string passwordActual, string nuevaPassword)
-        {
-            var response = await _http.PostAsJsonAsync("auth/reset-password", new { passwordActual, nuevaPassword });
             return response.IsSuccessStatusCode;
         }
 

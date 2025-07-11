@@ -25,7 +25,8 @@ namespace GestionTurnos.FrontEnd.Web.Pages
 
         public async Task<IActionResult> OnPostResetPassword()
         {
-            var passwordActual = Request.Form["PasswordActual"].ToString();
+            var email = HttpContext.Session.GetString("Email");
+            var token = Request.Form["Token"].ToString();
             var nuevaPassword = Request.Form["NuevaPassword"].ToString();
             var confirmarPassword = Request.Form["ConfirmarPassword"].ToString();
             if (nuevaPassword != confirmarPassword)
@@ -33,7 +34,7 @@ namespace GestionTurnos.FrontEnd.Web.Pages
                 Mensaje = "Las contraseñas no coinciden.";
                 return Page();
             }
-            var result = await _authApi.ResetPassword(passwordActual, nuevaPassword);
+            var result = await _authApi.ResetPasswordToken(email, token, nuevaPassword);
             Mensaje = result ? "Contraseña actualizada correctamente." : "Error al actualizar la contraseña.";
             return Page();
         }

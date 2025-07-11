@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReservIt! SPA</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        body { background: #f8f9fa; }
+    </style>
+</head>
+<body class="bg-light" x-data="spaApp()" x-init="init()">
+    <main class="container-fluid py-4">
+        <template x-if="rol === 'Administrador'">
+            <div class="alert alert-info mb-3">Estás logueado como administrador. Acceso a interfaces administrativas habilitado.</div>
+        </template>
+        <template x-if="rol === 'Administrador'">
+            <div class="mb-3">
+                <button class="btn btn-outline-primary me-2" @click="goTo('admin-servicios')">Administrar Servicios</button>
+                <button class="btn btn-outline-primary me-2" @click="goTo('admin-profesionales')">Administrar Profesionales</button>
+            </div>
+        </template>
+        <section x-show="page==='admin-servicios'">
+            <div class="card shadow-lg border-0 p-4 mb-4">
+                <h2>Administrar Servicios</h2>
+                <div class="mb-3">
+                    <button class="btn btn-success" @click="goTo('crear-servicio')">Agregar Servicio</button>
+                </div>
+                <ul class="list-group mb-3">
+                    <template x-for="s in servicios" :key="s.id">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong x-text="s.nombre"></strong> <span class="text-muted">- <span x-text="s.duracionMinutos + ' min'"></span></span></span>
+                            <span>
+                                <button class="btn btn-sm btn-primary me-2" @click="editarServicio(s)">Editar</button>
+                                <button class="btn btn-sm btn-danger" @click="eliminarServicio(s.id)">Eliminar</button>
+                            </span>
+                        </li>
+                    </template>
+                </ul>
+                <button class="btn btn-secondary" @click="goTo('main')">Volver</button>
+            </div>
+        </section>
+        <section x-show="page==='admin-profesionales'">
+            <div class="card shadow-lg border-0 p-4 mb-4">
+                <h2>Administrar Profesionales</h2>
+                <div class="mb-3">
+                    <button class="btn btn-success" @click="goTo('crear-profesional')">Agregar Profesional</button>
+                </div>
+                <ul class="list-group mb-3">
+                    <template x-for="p in profesionales" :key="p.id">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong x-text="p.nombreCompleto"></strong> <span class="text-muted">- <span x-text="p.especialidad"></span></span></span>
+                            <span>
+                                <button class="btn btn-sm btn-primary me-2" @click="editarProfesional(p)">Editar</button>
+                                <button class="btn btn-sm btn-danger" @click="eliminarProfesional(p.id)">Eliminar</button>
+                            </span>
+                        </li>
+                    </template>
+                </ul>
+                <button class="btn btn-secondary" @click="goTo('main')">Volver</button>
+            </div>
+        </section>
+        <section x-show="page==='login'" class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+                <div class="card shadow-lg border-0 p-4">
+                    <h2 class="mb-4 text-center">Iniciar sesión</h2>
+                    <form @submit.prevent="login">
+                        <div class="mb-3">
+                            <input type="text" x-model="loginData.email" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" x-model="loginData.password" class="form-control" placeholder="Contraseña" required>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
+                        </div>
+                    </form>
+                    <div x-text="loginMessage" class="alert alert-danger text-center mt-2" x-show="loginMessage"></div>
+                    <div class="text-center mt-3">
+                        <a href="#" @click.prevent="goTo('register')">¿No tienes cuenta? Regístrate</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section x-show="page==='register'" class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+                <div class="card shadow-lg border-0 p-4">
+                    <h2 class="mb-4 text-center">Registro</h2>
+                    <form @submit.prevent="register">
+                        <div class="mb-3">
+                            <input type="text" x-model="registerData.nombre" class="form-control" placeholder="Nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" x-model="registerData.email" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" x-model="registerData.password" class="form-control" placeholder="Contraseña" required>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-success btn-lg">Registrarse</button>
+                        </div>
+                    </form>
+                    <div x-text="registerMessage" class="alert alert-info text-center mt-2" x-show="registerMessage"></div>
+                    <div class="text-center mt-3">
+                        <a href="#" @click.prevent="goTo('login')">¿Ya tienes cuenta? Inicia sesión</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section x-show="page==='main'" class="row justify-content-center py-3">
+            <div class="col-12 col-lg-10 col-xl-9">
+                <div class="row g-4">
+                    <div class="col-12 col-md-4">
+                        <div class="card shadow-lg border-0 p-4 mb-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h2 class="mb-4">Servicios Disponibles</h2>
+                            </div>
+                            <div x-show="servicios.length === 0" class="alert alert-warning">No hay servicios disponibles.</div>
+                            <ul class="list-group mb-3">
+                                <template x-for="s in servicios" :key="s.id">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <strong x-text="s.nombre"></strong> <span class="text-muted">- <span x-text="s.duracionMinutos + ' min'"></span></span>
+                                        </span>
+                                        <button @click="selectServicio(s.id)" class="btn btn-outline-primary btn-sm">Agendar</button>
+                                    </li>
+                                </template>
+                            </ul>
+                            <div x-show="selectedServicio" class="mt-3">
+    <h4>Agendar turno</h4>
+    <div class="mb-2">
+        <label for="servicioSelect">Servicio</label>
+        <select id="servicioSelect" class="form-select mb-2" x-model="nuevoTurno.servicioId" @change="onServicioChange">
+            <option value="">Seleccione un servicio</option>
+            <template x-for="s in servicios" :key="s.id">
+                <option :value="s.id" x-text="s.nombre"></option>
+            </template>
+        </select>
+    </div>
+    <div class="mb-2">
+        <label for="profesionalSelect">Profesional</label>
+        <select id="profesionalSelect" class="form-select mb-2" x-model="nuevoTurno.profesionalId">
+            <option value="">Seleccione un profesional</option>
+            <template x-for="p in profesionalesFiltrados" :key="p.id">
+                <option :value="p.id" x-text="p.nombreCompleto"></option>
+            </template>
+        </select>
+    </div>
+    <input type="datetime-local" x-model="nuevoTurno.fechaHora" class="form-control mb-2" placeholder="Fecha y hora" />
+    <button @click="agendarTurno" class="btn btn-primary" :disabled="loading || !nuevoTurno.servicioId || !nuevoTurno.profesionalId || !nuevoTurno.fechaHora">Agendar</button>
+    <div x-text="turnoMensaje" class="alert alert-info mt-2" x-show="turnoMensaje"></div>
+    <template x-if="qrUrl">
+        <div class="mt-3 text-center">
+            <h5>QR generado</h5>
+            <img :src="qrUrl" alt="QR generado" style="width:200px;height:200px;" />
+        </div>
+    </template>
+</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="card shadow-lg border-0 p-4 h-100">
+                            <h2 class="mb-4">Mis Turnos</h2>
+                            <div x-show="turnos.length === 0" class="alert alert-secondary">No tienes turnos agendados.</div>
+                            <ul class="list-group">
+                                <template x-for="t in turnos" :key="t.id">
+                                    <li class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                                        <span>
+                                            <span x-text="new Date(t.fechaHora).toLocaleString()"></span> - <span x-text="t.servicioNombre"></span>
+                                        </span>
+                                        <div class="d-flex align-items-center mt-2 mt-md-0">
+                                            <template x-if="t.tokenQR">
+                                                <img :src="t.tokenQR" alt="QR" style="width:60px;height:60px;margin-right:10px;" />
+                                            </template>
+                                            <button @click="cancelarTurno(t.id)" class="btn btn-outline-danger btn-sm">Cancelar</button>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="card shadow-lg border-0 p-4 h-100">
+                            <h2 class="mb-4 text-center">Perfil de Usuario</h2>
+                            <div class="mb-3 text-center">
+                                <button class="btn btn-outline-danger" @click="logout">Cerrar sesión</button>
+                            </div>
+                            <form @submit.prevent="enviarRecuperarPassword">
+                                <div class="mb-3">
+                                    <input type="email" x-model="recuperarEmail" class="form-control" placeholder="Email para recuperar contraseña" required>
+                                </div>
+                                <div class="d-grid mb-2">
+                                    <button type="submit" class="btn btn-warning btn-lg">Enviar enlace de recuperación</button>
+                                </div>
+                            </form>
+                            <div x-text="recuperarMensaje" class="alert alert-info text-center mt-2" x-show="recuperarMensaje"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <template x-if="rol === 'Administrador' && page==='admin-servicios'">
+            <div class="card shadow-lg border-0 p-4 mb-4">
+                <h2>Administrar Servicios</h2>
+                <div class="mb-3">
+                    <button class="btn btn-success" @click="goTo('crear-servicio')">Agregar Servicio</button>
+                </div>
+                <ul class="list-group mb-3">
+                    <template x-for="s in servicios" :key="s.id">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong x-text="s.nombre"></strong> <span class="text-muted">- <span x-text="s.duracionMinutos + ' min'"></span></span></span>
+                            <span>
+                                <button class="btn btn-sm btn-primary me-2" @click="editarServicio(s)">Editar</button>
+                                <button class="btn btn-sm btn-danger" @click="eliminarServicio(s.id)">Eliminar</button>
+                            </span>
+                        </li>
+                    </template>
+                </ul>
+                <button class="btn btn-secondary" @click="goTo('main')">Volver</button>
+            </div>
+        </template>
+        <template x-if="rol === 'Administrador' && page==='crear-servicio'">
+            <div class="card shadow-lg border-0 p-4 mb-4">
+                <h2>Nuevo Servicio</h2>
+                <form @submit.prevent="guardarNuevoServicio">
+                    <div class="mb-3">
+                        <input class="form-control" placeholder="Nombre" x-model="nuevoServicio.nombre" required />
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control" type="number" placeholder="Duración (minutos)" x-model.number="nuevoServicio.duracionMinutos" required />
+                    </div>
+                    <button class="btn btn-success" type="submit">Guardar</button>
+                    <button class="btn btn-secondary ms-2" @click="goTo('admin-servicios')">Cancelar</button>
+                </form>
+                <div class="alert alert-info mt-2" x-text="servicioMensaje" x-show="servicioMensaje"></div>
+            </div>
+        </template>
+        <template x-if="rol === 'Administrador' && page==='editar-servicio'">
+            <div class="card shadow-lg border-0 p-4 mb-4">
+                <h2>Editar Servicio</h2>
+                <form @submit.prevent="guardarEdicionServicio">
+                    <div class="mb-3">
+                        <input class="form-control" placeholder="Nombre" x-model="servicioEdit.nombre" required />
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control" type="number" placeholder="Duración (minutos)" x-model.number="servicioEdit.duracionMinutos" required />
+                    </div>
+                    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+                    <button class="btn btn-secondary ms-2" @click="goTo('admin-servicios')">Cancelar</button>
+                </form>
+                <div class="alert alert-info mt-2" x-text="servicioMensaje" x-show="servicioMensaje"></div>
+            </div>
+        </template>
+        <template x-if="rol === 'Administrador' && page==='admin-profesionales'">
+            <div class="card shadow-lg border-0 p-4 mb-4">
+                <h2>Administrar Profesionales</h2>
+                <div class="mb-3">
+                    <button class="btn btn-success" @click="goTo('crear-profesional')">Agregar Profesional</button>
+                </div>
+                <ul class="list-group mb-3">
+                    <template x-for="p in profesionales" :key="p.id">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong x-text="p.nombreCompleto"></strong> <span class="text-muted">- <span x-text="p.especialidad"></span></span></span>
+                            <span>
+                                <button class="btn btn-sm btn-primary me-2" @click="editarProfesional(p)">Editar</button>
+                                <button class="btn btn-sm btn-danger" @click="eliminarProfesional(p.id)">Eliminar</button>
+                            </span>
+                        </li>
+                    </template>
+                </ul>
+                <button class="btn btn-secondary" @click="goTo('main')">Volver</button>
+            </div>
+        </template>
+        <template x-if="rol === 'Administrador' && page==='crear-profesional'">
+            <div class="card shadow-lg border-0 p-4 mb-4">
+                <h2>Nuevo Profesional</h2>
+                <form @submit.prevent="guardarNuevoProfesional">
+                    <div class="mb-3">
+                        <input class="form-control" placeholder="Nombre completo" x-model="nuevoProfesional.nombreCompleto" required />
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control" placeholder="Especialidad" x-model="nuevoProfesional.especialidad" required />
+                    </div>
+                    <div class="mb-3">
+                        <label>Servicios</label>
+                        <select class="form-select" multiple x-model="nuevoProfesional.serviciosIds">
+                            <template x-for="s in servicios" :key="s.id">
+                                <option :value="s.id" x-text="s.nombre"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <button class="btn btn-success" type="submit">Guardar</button>
+                    <button class="btn btn-secondary ms-2" @click="goTo('admin-profesionales')">Cancelar</button>
+                </form>
+                <div class="alert alert-info mt-2" x-text="profesionalMensaje" x-show="profesionalMensaje"></div>
+            </div>
+        </template>
+        <template x-if="rol === 'Administrador' && page==='editar-profesional'">
+            <div class="card shadow-lg border-0 p-4 mb-4">
+                <h2>Editar Profesional</h2>
+                <form @submit.prevent="guardarEdicionProfesional">
+                    <div class="mb-3">
+                        <input class="form-control" placeholder="Nombre completo" x-model="profesionalEdit.nombreCompleto" required />
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control" placeholder="Especialidad" x-model="profesionalEdit.especialidad" required />
+                    </div>
+                    <div class="mb-3">
+                        <label>Servicios</label>
+                        <select class="form-select" multiple x-model="profesionalEdit.serviciosIds">
+                            <template x-for="s in servicios" :key="s.id">
+                                <option :value="s.id" x-text="s.nombre"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+                    <button class="btn btn-secondary ms-2" @click="goTo('admin-profesionales')">Cancelar</button>
+                </form>
+                <div class="alert alert-info mt-2" x-text="profesionalMensaje" x-show="profesionalMensaje"></div>
+            </div>
+        </template>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

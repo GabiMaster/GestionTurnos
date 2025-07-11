@@ -9,6 +9,10 @@
             <h2 class="mb-4 text-center">Registro</h2>
             <form method="post">
                 <div class="mb-3">
+                    <label asp-for="Usuario.NombreUsuario" class="form-label">Nombre de usuario</label>
+                    <input asp-for="Usuario.NombreUsuario" class="form-control" />
+                </div>
+                <div class="mb-3">
                     <label asp-for="Usuario.Nombre" class="form-label"></label>
                     <input asp-for="Usuario.Nombre" class="form-control" />
                 </div>
@@ -30,6 +34,10 @@
                 @if (Model.Mensaje != null)
                 {
                     <div class="alert alert-info text-center">@Model.Mensaje</div>
+                }
+                @if (Model.MensajeError != null)
+                {
+                    <div class="alert alert-danger text-center">@Model.MensajeError</div>
                 }
             </form>
         </div>
