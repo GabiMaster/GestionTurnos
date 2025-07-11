@@ -65,6 +65,7 @@ artifacts/
 
 # Ignorar archivos de configuración sensibles
 **/appsettings.json
+**/appsettings.Development.json
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
