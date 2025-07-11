@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ReservIt! - Sistema de Gestión de Turnos
 
 ## Descripción
@@ -36,3 +37,6 @@ El sistema está pensado para profesionales y clientes que necesitan organizar y 
 - La generación y validación de QR permite confirmar asistencia a los turnos.
 
 ---
+=======
+# GestionTurnos
+>>>>>>> 839875854f8ce62244c3f0e7ca3f7e06568e83d4
